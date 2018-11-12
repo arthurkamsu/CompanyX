@@ -1,10 +1,5 @@
 D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\bin\Debug\CompanyXDB.dacpac
 D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\bin\Debug\CompanyXDB.dll
 D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\bin\Debug\CompanyXDB.pdb
-D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\CompanyXDB.sqlprojAssemblyReference.cache
-D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\Model.xml
-D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\refactor.xml
-D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\postdeploy.sql
-D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\predeploy.sql
 D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\CompanyXDB.dll
 D:\TFS\LeMAK-Soft\CompanyX\src\Database\CompanyXDB\obj\Debug\CompanyXDB.pdb
