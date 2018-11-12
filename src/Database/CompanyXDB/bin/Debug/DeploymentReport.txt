@@ -1,0 +1,24 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[Employees] (Table)
+       [dbo].[Employees].[IX_Employees_LastName] (Index)
+       [dbo].[Employees].[IX_Employees_FirstName] (Index)
+       [dbo].[Employees].[IX_Employees_empCode] (Index)
+       Default Constraint: unnamed constraint on [dbo].[Employees] (Default Constraint)
+       [dbo].[employee_code_seq] (Sequence)
+       [dbo].[FK_Employees_Manager] (Foreign Key)
+       [dbo].[CK_Employees_empCode] (Check Constraint)
+       [dbo].[Trigger_Employee_Inserted_GenerateMatricule] (Trigger)
+       [dbo].[Employees].[empId].[MS_Description] (Extended Property)
+
+** Supporting actions
