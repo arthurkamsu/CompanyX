@@ -51,7 +51,7 @@ CREATE TRIGGER [dbo].[Trigger_Employee_Inserted_GenerateMatricule]
 		declare @codeEmp  char(8)
 		set @codeEmp  = CONVERT(char(8), NEXT VALUE FOR employee_code_seq)
 		INSERT INTO Employees(empLastName,empFirstName,empMiddleName,empSalary,empManager,empTitle,empCode)
-		VALUES(inserted.empLastName,inserted.empFirstName,inserted.empMiddleName,inserted.empSalary,inserted.empManager,inserted.empTitle,@codeEmp)
+		SELECT i.empLastName,i.empFirstName,i.empMiddleName,i.empSalary,i.empManager,i.empTitle,@codeEmp from inserted i;
 
     END
 GO

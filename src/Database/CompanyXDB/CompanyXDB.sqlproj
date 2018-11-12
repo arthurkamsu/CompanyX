@@ -64,4 +64,7 @@
   <ItemGroup>
     <RefactorLog Include="CompanyXDB.refactorlog" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CompanyXDB.publish.xml" />
+  </ItemGroup>
 </Project>
