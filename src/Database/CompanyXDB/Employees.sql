@@ -42,18 +42,29 @@ CREATE INDEX [IX_Employees_FirstName] ON [dbo].[Employees] ([empFirstName])
 
 GO
 
-CREATE TRIGGER [dbo].[Trigger_Employee_Inserted_GenerateMatricule]
+CREATE TRIGGER [dbo].[Trigger_Employee_Inserted_GenerateEmpCode]
     ON [dbo].[Employees]
     INSTEAD OF INSERT
     AS
     BEGIN
 		SET NOCOUNT ON;
 		declare @codeEmp  char(8)
-		set @codeEmp  = CONVERT(char(8), NEXT VALUE FOR employee_code_seq)
-		INSERT INTO Employees(empLastName,empFirstName,empMiddleName,empSalary,empManager,empTitle,empCode)
-		SELECT i.empLastName,i.empFirstName,i.empMiddleName,i.empSalary,i.empManager,i.empTitle,@codeEmp from inserted i;
+		declare @nextSeqValString varchar(7) = NEXT VALUE FOR employee_code_seq
+		declare @nextSeqValInt bigint = CAST(@nextSeqValString as bigint)
+		declare @firstLetter char(1) = 'X';
 
-    END
+		SET @codeEmp = CASE 
+			WHEN  @nextSeqValInt > 0 and @nextSeqValInt < 10 THEN @firstLetter+'000000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 10 and @nextSeqValInt < 100 THEN @firstLetter+'00000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 100 and @nextSeqValInt < 1000 THEN @firstLetter+'0000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 1000 and @nextSeqValInt < 10000 THEN @firstLetter+'000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 10000 and @nextSeqValInt < 100000 THEN @firstLetter+'00'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 100000 and @nextSeqValInt < 1000000 THEN @firstLetter+'0'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 1000000 and @nextSeqValInt < 10000000 THEN @firstLetter+@nextSeqValString
+		END		
+		INSERT INTO Employees(empLastName,empFirstName,empMiddleName,empSalary,empManager,empTitle,empCode,registeredOnUTC)
+		SELECT i.empLastName,i.empFirstName,i.empMiddleName,i.empSalary,i.empManager,i.empTitle,@codeEmp,i.registeredOnUTC from inserted i;
+	END
 GO
 
 
