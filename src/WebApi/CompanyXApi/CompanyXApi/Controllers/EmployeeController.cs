@@ -127,23 +127,23 @@ namespace CompanyXApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateEmploye([FromBody] CreateEmployeeVM employee)
         {
-            
+
             var newEmp = new Employees
             {
                 EmpLastName = employee.Name,
                 EmpFirstName = employee.FirstName,
                 EmpMiddleName = employee.MiddleName,
                 EmpSalary = employee.MonthlySalary,
-                EmpTitle = employee.Position,
-                EmpManager = employee.Manager,
-                //EmpImage = employee.im
-
+                EmpTitle = employee.Title,
+                EmpManager = new Guid(employee.Manager),
+                UctregisteredOn = DateTime.UtcNow.Ticks,
+                //UctstartDate = new DateTime(employee.StartDate,)
             };
 
-
+            //add the image if the employee has been saved
             _context.Employees.Add(newEmp);
 
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetEmployeeById), new { idOrCode = newEmp.EmpId.ToString() }, null);
            

@@ -10,8 +10,9 @@ namespace CompanyXApi.ViewModels
         public string Name { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
-        public string Position { get; set; }
+        public string Title { get; set; }
         public decimal MonthlySalary { get; set; }
-        public Guid? Manager { get; set; }
+        public string Manager { get; set; }
+        public string StartDate { get; set; }
     }
 }
