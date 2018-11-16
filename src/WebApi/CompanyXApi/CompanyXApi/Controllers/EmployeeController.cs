@@ -37,74 +37,78 @@ namespace CompanyXApi.Controllers
 
             var itemsOnPage = await _context.Employees
                 .OrderBy(e => e.EmpLastName)
-                .ThenBy(e=>e.EmpLastName)
-                .ThenBy(e=>e.EmpMiddleName)
+                .ThenBy(e => e.EmpLastName)
+                .ThenBy(e => e.EmpMiddleName)
                 .Skip(count * pageIndex)
-                .Take(count)             
+                .Take(count)
                 .ToListAsync();
 
             var employeesToReturn = new List<DisplayEmployeeVM>();
-
-            foreach(var item in itemsOnPage)
-            {
-                //item.setEmployeeImageFullUrl(Configuration["ImagesBaseUrl"]);
-                item.setEmployeeImageFullUrl("ImagesBaseUrl");
-                var employeeToReturn = new BasicDisplayEmployeeVM
+            if (itemsOnPage.Count>0)
+            {            
+                foreach (var item in itemsOnPage)
                 {
-                    Id = item.EmpId.ToString(),
-                    Code = item.EmpCode,
-                    LastName = item.EmpLastName,
-                    FirstName = item.EmpFirstName,
-                    MiddleName = item.EmpMiddleName,
-                    Salary = item.EmpSalary,
-                    UCTRegisteredOn = item.UctregisteredOn,
-                    Title = item.EmpTitle,
-                    Image = item.EmpImage,
-                    UCTStartDate = item.UctstartDate
-                };
-
-                var originalManager = item.getMaNanager(_context);
-
-                var managerToReturn = (originalManager != null) ? new BasicDisplayEmployeeVM {
-                    Id = item.EmpId.ToString(),
-                    Code = item.EmpCode,
-                    LastName = item.EmpLastName,
-                    FirstName = item.EmpFirstName,
-                    MiddleName = item.EmpMiddleName,
-                    Salary = item.EmpSalary,
-                    UCTRegisteredOn = item.UctregisteredOn,
-                    Title = item.EmpTitle,
-                    Image = item.EmpImage,
-                    UCTStartDate = item.UctstartDate
-                } : null;
-
-                var originalListOfSubordinates = item.getSubordinates(this._context);
-
-                List<BasicDisplayEmployeeVM> listOfSubordinatesToReturn=null;
-
-                if(originalListOfSubordinates.Count>0)
-                {
-                    listOfSubordinatesToReturn = new List<BasicDisplayEmployeeVM>();
-                    foreach (var subordinate in originalListOfSubordinates)
+                    //item.setEmployeeImageFullUrl(Configuration["ImagesBaseUrl"]);
+                    item.setEmployeeImageFullUrl("ImagesBaseUrl");
+                    var employeeToReturn = new BasicDisplayEmployeeVM
                     {
-                        listOfSubordinatesToReturn.Add(new BasicDisplayEmployeeVM
+                        Id = item.EmpId.ToString(),
+                        Code = item.EmpCode,
+                        LastName = item.EmpLastName,
+                        FirstName = item.EmpFirstName,
+                        MiddleName = item.EmpMiddleName,
+                        Salary = item.EmpSalary,
+                        UCTRegisteredOn = item.UctregisteredOn,
+                        Title = item.EmpTitle,
+                        Image = item.EmpImage,
+                        UCTStartDate = item.UctstartDate
+                    };
+
+                    var originalManager = item.getMaNanager(_context);
+
+                    var managerToReturn = (originalManager != null) ? new BasicDisplayEmployeeVM {
+                        Id = item.EmpId.ToString(),
+                        Code = item.EmpCode,
+                        LastName = item.EmpLastName,
+                        FirstName = item.EmpFirstName,
+                        MiddleName = item.EmpMiddleName,
+                        Salary = item.EmpSalary,
+                        UCTRegisteredOn = item.UctregisteredOn,
+                        Title = item.EmpTitle,
+                        Image = item.EmpImage,
+                        UCTStartDate = item.UctstartDate
+                    } : null;
+
+                    var originalListOfSubordinates = item.getSubordinates(this._context);
+
+                    List<BasicDisplayEmployeeVM> listOfSubordinatesToReturn = null;
+
+                    if (originalListOfSubordinates.Count > 0)
+                    {
+                        listOfSubordinatesToReturn = new List<BasicDisplayEmployeeVM>();
+                        foreach (var subordinate in originalListOfSubordinates)
                         {
-                            Id = subordinate.EmpId.ToString(),
-                            Code = subordinate.EmpCode,
-                            LastName = subordinate.EmpLastName,
-                            FirstName = subordinate.EmpFirstName,
-                            MiddleName = subordinate.EmpMiddleName,
-                            Salary = subordinate.EmpSalary,
-                            UCTRegisteredOn = subordinate.UctregisteredOn,
-                            Title = subordinate.EmpTitle,
-                            Image = subordinate.EmpImage,
-                            UCTStartDate = subordinate.UctstartDate
-                        });
+                            listOfSubordinatesToReturn.Add(new BasicDisplayEmployeeVM
+                            {
+                                Id = subordinate.EmpId.ToString(),
+                                Code = subordinate.EmpCode,
+                                LastName = subordinate.EmpLastName,
+                                FirstName = subordinate.EmpFirstName,
+                                MiddleName = subordinate.EmpMiddleName,
+                                Salary = subordinate.EmpSalary,
+                                UCTRegisteredOn = subordinate.UctregisteredOn,
+                                Title = subordinate.EmpTitle,
+                                Image = subordinate.EmpImage,
+                                UCTStartDate = subordinate.UctstartDate
+                            });
+                        }
+                    }
+
+                    employeesToReturn.Add(new DisplayEmployeeVM(employeeToReturn, managerToReturn, listOfSubordinatesToReturn));
                     }
                 }
-                
-               employeesToReturn.Add(new DisplayEmployeeVM(employeeToReturn, managerToReturn, listOfSubordinatesToReturn));
-            }
+
+
 
             Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:4200");
 
