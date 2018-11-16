@@ -19,6 +19,7 @@ CREATE TABLE [dbo].[Employees]
     [empTitle] VARCHAR(50) NOT NULL, 
     [empCode] CHAR(8) NOT NULL, 
     [registeredOnUTC] BIGINT NOT NULL, 
+    [empImage] VARCHAR(13) NULL, 
     CONSTRAINT [FK_Employees_Manager] FOREIGN KEY ([empManager]) REFERENCES [Employees]([empId]), 
     CONSTRAINT [CK_Employees_empCode] CHECK (empSalary > 0)
 )
@@ -62,8 +63,8 @@ CREATE TRIGGER [dbo].[Trigger_Employee_Inserted_GenerateEmpCode]
 			WHEN  @nextSeqValInt >= 100000 and @nextSeqValInt < 1000000 THEN @firstLetter+'0'+@nextSeqValString
 			WHEN  @nextSeqValInt >= 1000000 and @nextSeqValInt < 10000000 THEN @firstLetter+@nextSeqValString
 		END		
-		INSERT INTO Employees(empLastName,empFirstName,empMiddleName,empSalary,empManager,empTitle,empCode,registeredOnUTC)
-		SELECT i.empLastName,i.empFirstName,i.empMiddleName,i.empSalary,i.empManager,i.empTitle,@codeEmp,i.registeredOnUTC from inserted i;
+		INSERT INTO Employees(empLastName,empFirstName,empMiddleName,empSalary,empManager,empTitle,empCode,UCTRegisteredOn,empImage,UCTStartDate)
+		SELECT i.empLastName,i.empFirstName,i.empMiddleName,i.empSalary,i.empManager,i.empTitle,@codeEmp,i.UCTRegisteredOn,i.empImage,i.UCTStartDate from inserted i;
 	END
 GO
 
