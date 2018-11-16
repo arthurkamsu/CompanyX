@@ -141,9 +141,14 @@ namespace CompanyXApi.Controllers
             };
 
             //add the image if the employee has been saved
-            _context.Employees.Add(newEmp);
+            var insertedEmp = _context.Employees.Add(newEmp);
 
-            var result = await _context.SaveChangesAsync();
+            //Task<int> saveTask = await _context.SaveChangesAsync();
+
+            //Image employeeImage = Tools.ImagesTool.Base64ToImage(employee.Image);
+
+            //if(saveTask.is)
+
 
             return CreatedAtAction(nameof(GetEmployeeById), new { idOrCode = newEmp.EmpId.ToString() }, null);
            
