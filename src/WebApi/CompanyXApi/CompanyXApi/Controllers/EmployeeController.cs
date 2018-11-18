@@ -136,14 +136,14 @@ namespace CompanyXApi.Controllers
                 EmpSalary = employee.MonthlySalary,
                 EmpTitle = employee.Title,
                 EmpManager = new Guid(employee.Manager),
-                UctregisteredOn = DateTime.UtcNow.Ticks,
+                UctregisteredOn = DateTime.UtcNow.Ticks
                 //UctstartDate = new DateTime(employee.StartDate,)
             };
 
             //add the image if the employee has been saved
-            var insertedEmp = _context.Employees.Add(newEmp);
+            _context.Employees.Add(newEmp);
 
-            //Task<int> saveTask = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             //Image employeeImage = Tools.ImagesTool.Base64ToImage(employee.Image);
 
