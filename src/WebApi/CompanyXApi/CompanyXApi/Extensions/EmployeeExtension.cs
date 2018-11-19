@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CompanyXApi.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-
+using System.Text;
 namespace CompanyXApi.Models
 {
     public static class EmployeeExtension
@@ -20,8 +20,27 @@ namespace CompanyXApi.Models
         }
         public static void setEmployeeImageFullUrl(this Employees employee, string baseUrl)
         {
-            employee.EmpImage = (employee.EmpImage != null) ? (baseUrl + employee.EmpImage):null;
+            string finalImage = (employee.EmpImage != null) ? string.Format(baseUrl, employee.EmpCode) : null;
+            employee.EmpImage = finalImage;
         }
+        public static string slug(this Employees employee)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (!string.IsNullOrWhiteSpace(employee.EmpFirstName))
+            {
+                sb.Append(employee.EmpFirstName.Replace(' ', '-'));
+                sb.Append("-");
+            }
 
+            if (!string.IsNullOrWhiteSpace(employee.EmpMiddleName))
+            {
+                sb.Append(employee.EmpMiddleName.Replace(' ', '-'));
+                sb.Append("-");
+            }
+
+            sb.Append(employee.EmpLastName.Replace(' ', '-'));
+
+            return sb.ToString();
+        }
     }
 }
