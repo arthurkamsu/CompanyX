@@ -13,7 +13,7 @@ namespace CompanyXApi.ViewModels
         public string Title { get; set; }
         public decimal MonthlySalary { get; set; }
         public string Manager { get; set; }
-        public string StartDate { get; set; }
+        public DateTime UtcStartDate { get; set; }
         public string Image { get; set; }
     }
 }
