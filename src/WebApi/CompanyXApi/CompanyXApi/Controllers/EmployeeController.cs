@@ -9,6 +9,9 @@ using System.Net;
 using System.Threading.Tasks;
 using CompanyXApi.ViewModels;
 using Microsoft.Extensions.Configuration;
+using System.Drawing;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace CompanyXApi.Controllers
 {
@@ -17,11 +20,17 @@ namespace CompanyXApi.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly CompanyXDBContext _context;
+        private IHostingEnvironment _envConfig;
+        private string _employeesImagesBaseUrl;
+        private IConfiguration _appConfig;
 
-        public EmployeeController(CompanyXDBContext context, IConfiguration configuration)
+        public EmployeeController(CompanyXDBContext context,IHostingEnvironment envConfig, IConfiguration configuration)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            
+            _envConfig = envConfig;
+            _appConfig = configuration;
+
+            _employeesImagesBaseUrl = Path.Combine(_envConfig.WebRootPath,_appConfig["employeesImagesFolder"]);
             ((CompanyXDBContext)context).ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
         }
 
@@ -49,7 +58,7 @@ namespace CompanyXApi.Controllers
                 foreach (var item in itemsOnPage)
                 {
                     //item.setEmployeeImageFullUrl(Configuration["ImagesBaseUrl"]);
-                    item.setEmployeeImageFullUrl(baseUrl: "ImagesBaseUrl");
+                    item.setEmployeeImageFullUrl(baseUrl: _employeesImagesBaseUrl);
                     var employeeToReturn = new BasicDisplayEmployeeVM
                     {
                         Id = item.EmpId.ToString(),
@@ -68,7 +77,7 @@ namespace CompanyXApi.Controllers
                     BasicDisplayEmployeeVM managerToReturn = null;
                     if (originalManager != null)
                     {
-                        originalManager.setEmployeeImageFullUrl(baseUrl: "ImagesBaseUrl");
+                        originalManager.setEmployeeImageFullUrl(baseUrl: _employeesImagesBaseUrl);
 
                         managerToReturn =  new BasicDisplayEmployeeVM
                         {
@@ -93,7 +102,7 @@ namespace CompanyXApi.Controllers
                         listOfSubordinatesToReturn = new List<BasicDisplayEmployeeVM>();
                         foreach (var subordinate in originalListOfSubordinates)
                         {
-                            subordinate.setEmployeeImageFullUrl(baseUrl: "ImagesBaseUrl");
+                            subordinate.setEmployeeImageFullUrl(baseUrl: _employeesImagesBaseUrl);
                             listOfSubordinatesToReturn.Add(new BasicDisplayEmployeeVM
                             {
                                 Id = subordinate.EmpId.ToString(),
@@ -115,8 +124,8 @@ namespace CompanyXApi.Controllers
                 }
 
 
-
-            Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:4200");
+            if(_envConfig.IsDevelopment())
+                Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:4200");
 
             return Ok(new PaginatedResponse<DisplayEmployeeVM>(pageIndex, count, totalItems, employeesToReturn));
 
@@ -125,6 +134,7 @@ namespace CompanyXApi.Controllers
         [HttpPost]
         [Route("create")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> CreateEmploye([FromBody] CreateEmployeeVM employee)
         {
 
@@ -136,22 +146,42 @@ namespace CompanyXApi.Controllers
                 EmpSalary = employee.MonthlySalary,
                 EmpTitle = employee.Title,
                 EmpManager = new Guid(employee.Manager),
-                UctregisteredOn = DateTime.UtcNow.Ticks
-                //UctstartDate = new DateTime(employee.StartDate,)
-            };
+                UctregisteredOn = DateTime.UtcNow.Ticks,
+                UctstartDate = employee.UtcStartDate.Ticks
+            };            
 
-            //add the image if the employee has been saved
-            _context.Employees.Add(newEmp);
+            string employeeImagephysicalPath = null;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Employees.Add(newEmp);
+                await _context.SaveChangesAsync();//this will raise an error of type: the affected row expected is 1 but actually 0
 
-            //Image employeeImage = Tools.ImagesTool.Base64ToImage(employee.Image);
+                if (!string.IsNullOrWhiteSpace(employee.Image))
+                {
+                    if (!Directory.Exists(_employeesImagesBaseUrl)) Directory.CreateDirectory(_employeesImagesBaseUrl);
+                    Image employeeImage = Tools.ImagesTool.Base64ToImage(employee.Image);
+                    string empImg = newEmp.EmpCode + ".JPG";
+                    employeeImagephysicalPath = Path.Combine(_employeesImagesBaseUrl, empImg);
+                    employeeImage.Save(employeeImagephysicalPath);
+                    newEmp.EmpImage = empImg;               
+                    await _context.SaveChangesAsync();
+                }
 
-            //if(saveTask.is)
+                return CreatedAtAction(nameof(GetEmployeeById), new { idOrCode = newEmp.EmpId.ToString() }, null);
 
+            }
+            catch (Exception ex)
+            {
+                if (!string.IsNullOrEmpty(employeeImagephysicalPath))
+                    if (System.IO.File.Exists(employeeImagephysicalPath)) System.IO.File.Delete(employeeImagephysicalPath);
+                //log the error
+                if(_envConfig.IsProduction())
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new {Message = "An error occured while creating the employee. Please contact the administrator."});
+                else return StatusCode((int)HttpStatusCode.InternalServerError, new { Trace = ex.StackTrace, Message = ex.Message, Source = ex.Source, Inner = ex.InnerException });
+                
+            }
 
-            return CreatedAtAction(nameof(GetEmployeeById), new { idOrCode = newEmp.EmpId.ToString() }, null);
-           
         }
 
         [HttpGet]
@@ -166,7 +196,7 @@ namespace CompanyXApi.Controllers
             {
                 var item = result[0];
 
-                item.setEmployeeImageFullUrl(baseUrl: "ImagesBaseUrl");
+                item.setEmployeeImageFullUrl(baseUrl: _employeesImagesBaseUrl);
                 var employeeToReturn = new BasicDisplayEmployeeVM
                 {
                     Id = item.EmpId.ToString(),
@@ -185,7 +215,7 @@ namespace CompanyXApi.Controllers
                 BasicDisplayEmployeeVM managerToReturn = null;
                 if (originalManager != null)
                 { 
-                    originalManager.setEmployeeImageFullUrl(baseUrl: "ImagesBaseUrl");
+                    originalManager.setEmployeeImageFullUrl(baseUrl: _employeesImagesBaseUrl);
 
                     managerToReturn =  new BasicDisplayEmployeeVM
                     {
@@ -210,7 +240,7 @@ namespace CompanyXApi.Controllers
                     listOfSubordinatesToReturn = new List<BasicDisplayEmployeeVM>();
                     foreach (var subordinate in originalListOfSubordinates)
                     {
-                        subordinate.setEmployeeImageFullUrl(baseUrl:"ImagesBaseUrl");
+                        subordinate.setEmployeeImageFullUrl(baseUrl: _employeesImagesBaseUrl);
                         listOfSubordinatesToReturn.Add(new BasicDisplayEmployeeVM
                         {
                             Id = subordinate.EmpId.ToString(),

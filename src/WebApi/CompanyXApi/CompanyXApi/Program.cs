@@ -12,9 +12,13 @@ namespace CompanyXApi
 {
     public class Program
     {
+      
         public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
+        {            
+                CreateWebHostBuilder(args)
+               //.UseUrls("http://companyxapi.arthurkamsu.me")  
+              
+               .Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

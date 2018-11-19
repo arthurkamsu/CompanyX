@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using CompanyXApi.Models;
-
 namespace CompanyXApi.Infrastructure
 {
     public partial class CompanyXDBContext : DbContext
@@ -50,7 +49,8 @@ namespace CompanyXApi.Infrastructure
                     .IsRequired()
                     .HasColumnName("empCode")
                     .HasMaxLength(8)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("([dbo].[generateNewEmployeeCode](CONVERT([bigint],NEXT VALUE FOR [dbo].[employee_code_seq])))");
 
                 entity.Property(e => e.EmpFirstName)
                     .HasColumnName("empFirstName")
