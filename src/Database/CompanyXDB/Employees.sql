@@ -8,6 +8,28 @@
   NO CACHE;
 
 GO
+
+CREATE FUNCTION generateNewEmployeeCode(@nextSeqValInt bigint)
+RETURNS Char(8)
+AS
+	BEGIN		
+		declare @codeEmp  char(8)
+		declare @nextSeqValString varchar(7) = CAST(@nextSeqValInt as varchar(7))		
+		declare @firstLetter char(1) = 'X';
+
+		SET @codeEmp = CASE 
+			WHEN  @nextSeqValInt > 0 and @nextSeqValInt < 10 THEN @firstLetter+'000000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 10 and @nextSeqValInt < 100 THEN @firstLetter+'00000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 100 and @nextSeqValInt < 1000 THEN @firstLetter+'0000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 1000 and @nextSeqValInt < 10000 THEN @firstLetter+'000'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 10000 and @nextSeqValInt < 100000 THEN @firstLetter+'00'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 100000 and @nextSeqValInt < 1000000 THEN @firstLetter+'0'+@nextSeqValString
+			WHEN  @nextSeqValInt >= 1000000 and @nextSeqValInt < 10000000 THEN @firstLetter+@nextSeqValString
+		END		
+	RETURN @codeEmp
+	END
+GO
+
 CREATE TABLE [dbo].[Employees]
 (
 	[empId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT newid(), 
@@ -17,7 +39,7 @@ CREATE TABLE [dbo].[Employees]
     [empSalary] DECIMAL(6, 2) NOT NULL, 
     [empManager] UNIQUEIDENTIFIER NULL, 
     [empTitle] VARCHAR(50) NOT NULL, 
-    [empCode] CHAR(8) NOT NULL, 
+    [empCode] CHAR(8) NOT NULL DEFAULT ([dbo].[generateNewEmployeeCode](CONVERT([bigint],NEXT VALUE FOR [dbo].[employee_code_seq]))), 
     [registeredOnUTC] BIGINT NOT NULL, 
     [empImage] VARCHAR(13) NULL, 
     CONSTRAINT [FK_Employees_Manager] FOREIGN KEY ([empManager]) REFERENCES [Employees]([empId]), 
@@ -43,30 +65,6 @@ CREATE INDEX [IX_Employees_FirstName] ON [dbo].[Employees] ([empFirstName])
 
 GO
 
-CREATE TRIGGER [dbo].[Trigger_Employee_Inserted_GenerateEmpCode]
-    ON [dbo].[Employees]
-    INSTEAD OF INSERT
-    AS
-    BEGIN
-		SET NOCOUNT ON;
-		declare @codeEmp  char(8)
-		declare @nextSeqValString varchar(7) = NEXT VALUE FOR employee_code_seq
-		declare @nextSeqValInt bigint = CAST(@nextSeqValString as bigint)
-		declare @firstLetter char(1) = 'X';
-
-		SET @codeEmp = CASE 
-			WHEN  @nextSeqValInt > 0 and @nextSeqValInt < 10 THEN @firstLetter+'000000'+@nextSeqValString
-			WHEN  @nextSeqValInt >= 10 and @nextSeqValInt < 100 THEN @firstLetter+'00000'+@nextSeqValString
-			WHEN  @nextSeqValInt >= 100 and @nextSeqValInt < 1000 THEN @firstLetter+'0000'+@nextSeqValString
-			WHEN  @nextSeqValInt >= 1000 and @nextSeqValInt < 10000 THEN @firstLetter+'000'+@nextSeqValString
-			WHEN  @nextSeqValInt >= 10000 and @nextSeqValInt < 100000 THEN @firstLetter+'00'+@nextSeqValString
-			WHEN  @nextSeqValInt >= 100000 and @nextSeqValInt < 1000000 THEN @firstLetter+'0'+@nextSeqValString
-			WHEN  @nextSeqValInt >= 1000000 and @nextSeqValInt < 10000000 THEN @firstLetter+@nextSeqValString
-		END		
-		INSERT INTO Employees(empLastName,empFirstName,empMiddleName,empSalary,empManager,empTitle,empCode,UCTRegisteredOn,empImage,UCTStartDate)
-		SELECT i.empLastName,i.empFirstName,i.empMiddleName,i.empSalary,i.empManager,i.empTitle,@codeEmp,i.UCTRegisteredOn,i.empImage,i.UCTStartDate from inserted i;
-	END
+CREATE UNIQUE INDEX [IX_Employees_empCode] ON [dbo].[Employees] ([empCode])
 GO
 
-
-CREATE UNIQUE INDEX [IX_Employees_empCode] ON [dbo].[Employees] ([empCode])
