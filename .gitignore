@@ -1,7 +1,5 @@
-wwwroot/
 bin/
 obj/
-wwwroot/
 *.dbmdl
 .vs/
 .git/

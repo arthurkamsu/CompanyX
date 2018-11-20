@@ -1,0 +1,12 @@
+.navWrapper {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  box-sizing: border-box;
+  /*border: red solid 1px;*/
+  box-shadow: 0 6px 6px -6px #222;
+}
+  .navWrapper .company-name {
+   
+    font-weight:bold;
+    font-size:x-large;
+  }
