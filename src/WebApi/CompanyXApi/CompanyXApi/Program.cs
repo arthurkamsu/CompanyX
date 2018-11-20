@@ -17,7 +17,7 @@ namespace CompanyXApi
         {            
                 CreateWebHostBuilder(args)
                .UseUrls("http://localhost:61933,http://companyxapi.arthurkamsu.me")  
-                .UseEnvironment(EnvironmentName.Development)
+                //.UseEnvironment(EnvironmentName.Development)
                .Build().Run();
         }
 

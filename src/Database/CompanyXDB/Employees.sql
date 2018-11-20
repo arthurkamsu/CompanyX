@@ -36,7 +36,7 @@ CREATE TABLE [dbo].[Employees]
     [empLastName] VARCHAR(50) NOT NULL, 
     [empFirstName] VARCHAR(50) NULL, 
     [empMiddleName] VARCHAR(50) NULL, 
-    [empSalary] DECIMAL(6, 2) NOT NULL, 
+    [empSalary] DECIMAL(8, 2) NOT NULL, 
     [empManager] UNIQUEIDENTIFIER NULL, 
     [empTitle] VARCHAR(50) NOT NULL, 
     [empCode] CHAR(8) NOT NULL DEFAULT ([dbo].[generateNewEmployeeCode](CONVERT([bigint],NEXT VALUE FOR [dbo].[employee_code_seq]))), 
@@ -62,6 +62,10 @@ CREATE INDEX [IX_Employees_LastName] ON [dbo].[Employees] ([empLastName])
 GO
 
 CREATE INDEX [IX_Employees_FirstName] ON [dbo].[Employees] ([empFirstName])
+
+GO
+
+CREATE INDEX [IX_Employees_MiddleName] ON [dbo].[Employees] ([empMiddleName])
 
 GO
 
