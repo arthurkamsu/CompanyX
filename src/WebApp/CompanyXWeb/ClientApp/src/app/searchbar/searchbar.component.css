@@ -1,0 +1,18 @@
+.search-bar {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left:15px;
+  border: dashed 1px #eee;
+  box-sizing: padding-box;
+}
+.search-textbox-wrapper {
+  border-radius: 10px;
+  border: solid 2px #eee;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  box-sizing:border-box;
+}
+.search-textbox {
+  border-style: none;
+  width: 100%;
+}

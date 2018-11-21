@@ -1,0 +1,5 @@
+.side-bar {
+ top:90px;
+  position: -webkit-sticky;
+  position: sticky;
+}

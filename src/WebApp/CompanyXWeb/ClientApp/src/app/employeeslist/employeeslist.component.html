@@ -1,0 +1,89 @@
+
+<div class="loading-employee" *ngIf="undefined === employeesToDisplay">
+
+  <img src="./assets/loading.png" alt="loading employees..."/>
+
+</div>
+
+<div class="employees-list" *ngIf="employeesToDisplay">
+
+  <div class="row set-of-three-employees">
+    <!--We need the row else the card deks will be linked-->
+    <div class="card-deck">
+
+
+      <div class="card text-white bg-dark" *ngFor="let elt of employeesToDisplay.employees  | slice:0:3">
+        <div class="card-header">
+          <img *ngIf="elt.employeeManager" alt="{{elt.employeeManager.firstName+' ' + elt.employeeManager.middleName +' '+elt.employeeManager.lastName}}" width="32" title="{{elt.employeeManager.firstName+' ' + elt.employeeManager.middleName +' '+elt.employeeManager.lastName}}" src="{{elt.employeeManager.image}}">
+        </div>
+
+        <img *ngIf="undifined == elt.employee.image" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+        <img *ngIf="elt.employee.image" alt="{{elt.employee.firstName+' '+elt.employee.lastName}}" src="{{elt.employee.image}}">
+
+        <div class="card-body">
+          <h5 class="card-title">{{elt.employee.firstName+' '+elt.employee.lastName}}</h5>
+          <p class="card-text">{{elt.employee.title}}, started on {{elt.employee.uctStartDate}}.</p>
+        </div>
+        <div class="card-footer">
+          
+          <ng-container *ngIf="undefined != elt.employeeSubordinates && elt.employeeSubordinates.length > 0">
+
+            <ng-container *ngIf="elt.employeeSubordinates.length > 5">
+              <img *ngFor="let sub of elt.employeeSubordinates | slice:0:5" alt="{{sub.firstName+ ' ' + sub.middleName+' '+sub.lastName}}" width="32" title="{{sub.firstName+' ' +sub.middleName+' '+sub.lastName}}" src="{{sub.image}}">
+
+              <a *ngIf="elt.employeeSubordinates.length > 5" href="#" title="More subordinates">...</a>
+
+            </ng-container>
+            <ng-container *ngIf="elt.employeeSubordinates.length <= 5">
+              <img *ngFor="let sub of elt.employeeSubordinates" alt="{{sub.firstName+ ' ' + sub.middleName+' '+sub.lastName}}" width="32" title="{{sub.firstName+' ' +sub.middleName+' '+sub.lastName}}" src="{{sub.image}}">
+            </ng-container>
+
+          </ng-container>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+  <br />
+
+  <div class="row set-of-three-employees">
+    <!--We need the row else the card deks will be linked-->
+    <div class="card-deck">
+
+
+      <div class="card text-white bg-dark" *ngFor="let elt of employeesToDisplay.employees  | slice:3:6">
+        <div class="card-header">
+          <img *ngIf="elt.employeeManager" alt="{{elt.employeeManager.firstName+' ' + elt.employeeManager.middleName +' '+elt.employeeManager.lastName}}" width="32" title="{{elt.employeeManager.firstName+' ' + elt.employeeManager.middleName +' '+elt.employeeManager.lastName}}" src="{{elt.employeeManager.image}}">
+        </div>
+
+        <img *ngIf="undifined == elt.employee.image" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+        <img *ngIf="elt.employee.image" alt="Angular Logo" src="{{elt.employee.image}}">
+
+        <div class="card-body">
+          <h5 class="card-title">{{elt.employee.firstName+' '+elt.employee.lastName}}</h5>
+          <p class="card-text">{{elt.employee.title}}, started on {{elt.employee.uctStartDate}}.</p>
+        </div>
+        <div class="card-footer">
+          <img alt="Angular Logo" width="32" title="Arthur Kamsu" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+
+          <template *ngIf="undifined != elt.employeeSubordinates && elt.employeeSubordinates.length > 0">
+
+            <img *ngFor="let sub of elt.employeeSubordinates" alt="Angular Logo" width="32" title="Arthur Kamsu" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+
+            <a *ngIf="elt.employeeSubordinates.length > 5" href="#" title="More subordinates">...</a>
+
+          </template>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+
+</div>
+

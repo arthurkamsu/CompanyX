@@ -1,0 +1,13 @@
+.content-wrapper {
+  margin-top:15px;
+  /*border: black solid 1px;*/
+}
+.main-section {
+  box-sizing: border-box;
+  /*border: yellow solid 1px;*/
+}
+.side-bar {
+  box-sizing: border-box;
+  /*border: green solid 1px;
+  */
+}

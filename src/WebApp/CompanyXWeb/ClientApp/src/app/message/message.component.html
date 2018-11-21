@@ -1,0 +1,8 @@
+<div *ngIf="Count()>0">
+  <h2>Messages</h2>
+  <button class="clear"
+          (click)="Clear()">
+    clear
+  </button>
+  <div *ngFor='let message of GetMessages()'> {{message}} </div>
+</div>
