@@ -11,31 +11,53 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using CompanyXApi.Infrastructure;
+using System.IO;
 
 namespace CompanyXApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
+        private IHostingEnvironment _envConfig;
+
+        public Startup(IConfiguration configuration,IHostingEnvironment environment)
+        {            
             Configuration = configuration;
+            _envConfig = environment;
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            /*
+            #region Add Configuration  
+            var environmentConfig = $"appsettings.{_envConfig.EnvironmentName}.json";
+            environmentConfig = !File.Exists(Path.Combine(Directory.GetCurrentDirectory(), environmentConfig)) ? "appsettings.json" : environmentConfig;
+
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(environmentConfig)
+                .Build();           
+
+            services.AddSingleton(Configuration);
+
+            #endregion
+            */
+            services.AddDbContext<CompanyXDBContext>(
+            options => options.UseSqlServer(Configuration["ConnectionString"])
+            );
+
             services.AddSwaggerGen
                 (
                     Options => 
                     {
-                        Options.SwaggerDoc("v0.1.0",new Swashbuckle.AspNetCore.Swagger.Info
+                        Options.SwaggerDoc("v0.4.1",new Swashbuckle.AspNetCore.Swagger.Info
                             {
                                 Title = "CompanyX API Developer Guide",
                                 Description = "This API is for CRUD operations on a fictif company \"CompanyX\" employees database.",
-                                Version = "0.1.0",
+                                Version = "0.4.1",
                                 Contact =new Swashbuckle.AspNetCore.Swagger.Contact
                                 {
                                     Email="arthur.kamsu.m@gmail.com",
@@ -44,19 +66,17 @@ namespace CompanyXApi
                                 },                               
                                 License=new Swashbuckle.AspNetCore.Swagger.License
                                 {
-                                    Name="CompanyX API License v0.1.0",
-                                    Url="http://compamyxlicenses.com/api-v-0.1.0"
+                                    Name="CompanyX API License v0.4.1",
+                                    Url="http://compamyxlicenses.com/api-v-0.4.1"
                                 },
-                                TermsOfService = "http://compamyxtos.com/api-v-0.1.0"                                
+                                TermsOfService = "http://compamyxtos.com/api-v-0.4.1"                                
                             }
                             
                         );
                     }
                 );
 
-            services.AddDbContext<CompanyXDBContext>(
-                options=>options.UseSqlServer(Configuration["ConnectionString"])
-                );
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,7 +90,7 @@ namespace CompanyXApi
             app.UseSwagger();
             app.UseSwaggerUI(
                 c => {
-                    c.SwaggerEndpoint("/swagger/v0.1.0/swagger.json", "CompanyX API v0.1.0");
+                    c.SwaggerEndpoint("/swagger/v0.4.1/swagger.json", "CompanyX API v0.4.1");
                     c.RoutePrefix = string.Empty;                    
                 }
             );

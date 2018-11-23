@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>0.4.1</Version>
+    <Authors>Arthur Kamsu Mbiydzenyuy @LeMAK</Authors>
+    <Product>CompanyX</Product>
+    <Description>api for the CompanyX project</Description>
+    <PackageProjectUrl>http://CompanyX.arthurkamsu.me</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/arthurkamsu/CompanyX.git</RepositoryUrl>
+    <PackageTags>Full Stack Development,MSSQL,.Net Core,Angular</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -12,10 +12,12 @@ using Microsoft.Extensions.Configuration;
 using System.Drawing;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using CompanyXApi.Tools;
+
 
 namespace CompanyXApi.Controllers
 {
-    [Route("api/v0.1.0/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -26,6 +28,9 @@ namespace CompanyXApi.Controllers
         private string _employeesImagesFolder;
         private string _employeesImagesPublicBaseUrl;
 
+        private const int DEFAULT_EMPLOYEE_IMAGE_SIZE = 400;
+        private const int DEFAULT_EMPLOYEE_IMAGE_QUALITY = 75;
+
         public EmployeeController(CompanyXDBContext context,IHostingEnvironment envConfig, IConfiguration configuration)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -33,10 +38,11 @@ namespace CompanyXApi.Controllers
             _appConfig = configuration;
 
             _employeesImagesFolder = Path.Combine(_envConfig.WebRootPath,_appConfig["EMPLOYEES_IMAGES_FOLDER"]);
-            _employeesImagesPublicBaseUrl = _appConfig["BASE_URL"]+ "/api/v0.1.0/employee/{0}/pic" ;
+            //depending on the envirenment, the base url will be populated
+            _employeesImagesPublicBaseUrl = _appConfig["BASE_URL"]+ "/api/employee/{0}/pic" ;
             
-
-            ((CompanyXDBContext)context).ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+            if(_envConfig.IsDevelopment())
+                ((CompanyXDBContext)context).ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
         }
 
         [HttpGet]
@@ -45,14 +51,14 @@ namespace CompanyXApi.Controllers
         [ProducesResponseType(typeof(PaginatedResponse<Employees>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetEmployees([FromQuery]int count, [FromQuery]int pageIndex = 0)
         {
-
+            
             var totalItems = await _context.Employees
                 .LongCountAsync();
 
             var itemsOnPage = await _context.Employees
-                .OrderBy(e => e.EmpLastName)
-                .ThenBy(e => e.EmpLastName)
-                .ThenBy(e => e.EmpMiddleName)
+                .OrderBy(e => e.EmpFirstName)
+                //.ThenBy(e => e.EmpLastName)
+                //.ThenBy(e => e.EmpMiddleName)
                 .Skip(count * pageIndex)
                 .Take(count)
                 .ToListAsync();
@@ -164,10 +170,11 @@ namespace CompanyXApi.Controllers
                 if (!string.IsNullOrWhiteSpace(employee.Image))
                 {
                     if (!Directory.Exists(_employeesImagesFolder)) Directory.CreateDirectory(_employeesImagesFolder);
-                    Image employeeImage = Tools.ImagesTool.Base64ToImage(employee.Image);
+                    Image employeeImage =ImagesTool.ResizeImage(ImagesTool.Base64ToImage(employee.Image),DEFAULT_EMPLOYEE_IMAGE_SIZE,DEFAULT_EMPLOYEE_IMAGE_QUALITY);
                     string empImg = newEmp.EmpCode + ".JPG";
-                    employeeImagephysicalPath = Path.Combine(_employeesImagesFolder, empImg);
-                    employeeImage.Save(employeeImagephysicalPath);
+                    employeeImagephysicalPath = Path.Combine(_employeesImagesFolder, empImg);                  
+                    
+                    employeeImage.SaveWithEncoder(employeeImagephysicalPath, DEFAULT_EMPLOYEE_IMAGE_QUALITY);
                     newEmp.EmpImage = empImg;               
                     await _context.SaveChangesAsync();
                 }
@@ -296,11 +303,11 @@ namespace CompanyXApi.Controllers
                 if (!string.IsNullOrEmpty(employeeToUpdate.Image))
                 {
                     if (!Directory.Exists(_employeesImagesFolder)) Directory.CreateDirectory(_employeesImagesFolder);
-                    Image employeeImage = Tools.ImagesTool.Base64ToImage(employeeToUpdate.Image);
+                    Image employeeImage = ImagesTool.ResizeImage(ImagesTool.Base64ToImage(employeeToUpdate.Image),DEFAULT_EMPLOYEE_IMAGE_SIZE,DEFAULT_EMPLOYEE_IMAGE_QUALITY) ;
                     
                     //update of the image might not be needed
                     string employeeImagephysicalPath = Path.Combine(_employeesImagesFolder, empImg);
-                    employeeImage.Save(employeeImagephysicalPath);
+                    employeeImage.SaveWithEncoder(employeeImagephysicalPath,DEFAULT_EMPLOYEE_IMAGE_QUALITY);
 
                     if (string.IsNullOrEmpty(currentEmp.EmpImage)) currentEmp.EmpImage = empImg;
                 }

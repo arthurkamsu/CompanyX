@@ -11,7 +11,8 @@ import { Observable } from 'rxjs';
 })
 export class EmplyeeService {
   
-  baseUrl = 'http://companyxapi.arthurkamsu.me/';
+  baseUrl = 'http://localhost:61933/';
+  //baseUrl = 'http://companyxapi.arthurkamsu.me/v0.4.1/';
   //restItems: Observable<PaginatedResponse>;
   employees: Observable<any>;
 
@@ -23,7 +24,7 @@ export class EmplyeeService {
     this.employees = undefined;
     this.messageService.add('Employees fetching started...');
     this.employees = this.http
-      .get<any>(this.baseUrl + 'api/v0.1.0/Employee/list?count=' + count + '&pageIndex=' + index);
+      .get<any>(this.baseUrl + 'api/Employee/list?count=' + count + '&pageIndex=' + index);
     //.pipe(map(data => data));
     this.messageService.add('Employees fetched successfully...');
     return this.employees;

@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
 
 namespace CompanyXApi.Tools
 {
-    public class ImagesTool
+    public static class ImagesTool
     {
         public static Image Base64ToImage(string base64String)
         {          
@@ -40,6 +41,32 @@ namespace CompanyXApi.Tools
             }
         }
 
+        public static Image ResizeImage(Image imageToResize,int neededSize,int quality)
+        {
+            int width, height;
+            if (imageToResize.Width > imageToResize.Height)
+            {
+                width = neededSize;
+                height = Convert.ToInt32(imageToResize.Height * neededSize / (double)imageToResize.Width);
+            }
+            else
+            {
+                width = Convert.ToInt32(imageToResize.Width * neededSize / (double)imageToResize.Height);
+                height = neededSize;
+            }
+            var resized = new Bitmap(width, height);
+
+            using (var graphics = Graphics.FromImage(resized))
+            {
+                graphics.CompositingQuality = CompositingQuality.HighSpeed;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.DrawImage(imageToResize, 0, 0, width, height);    
+                
+            }
+
+            return resized;            
+        }
 
     }
 }

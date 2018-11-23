@@ -37,7 +37,7 @@ namespace CompanyXApi.Controllers
         }
 
         [HttpGet]
-        [Route("api/v0.1.0/employee/{idOrCode:minlength(8)}/pic")]
+        [Route("api/employee/{idOrCode:minlength(8)}/pic")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetImage(string idOrCode)
