@@ -90,7 +90,7 @@ namespace CompanyXApi
             app.UseSwagger();
             app.UseSwaggerUI(
                 c => {
-                    c.SwaggerEndpoint("/swagger/v0.4.1/swagger.json", "CompanyX API v0.4.1");
+                    c.SwaggerEndpoint("/swagger/swagger.json", "CompanyX API v0.4.1");
                     c.RoutePrefix = string.Empty;                    
                 }
             );

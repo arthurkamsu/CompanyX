@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EmplyeeService } from '../employee.service';
+import { PaginatedResponse } from '../Models/PaginatedResponse';
 @Component({
   selector: 'app-employeeslist',
   templateUrl: './employeeslist.component.html',
@@ -7,14 +8,14 @@ import { EmplyeeService } from '../employee.service';
 })
 export class EmployeeslistComponent implements OnInit {
 
-  public employeesToDisplay: any;
+  public employeesToDisplay: PaginatedResponse;
   public setsOfThree = 2;
 
   constructor(private employeeService: EmplyeeService) { }
 
   ngOnInit() {
 
-    this.employeesToDisplay = this.getEmployeesToDisplay(6,0);
+    this.getEmployeesToDisplay(6,0);
 
   }
 
