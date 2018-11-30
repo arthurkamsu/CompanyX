@@ -17,12 +17,12 @@ namespace CompanyXApi
 {
     public class Startup
     {
-        private IHostingEnvironment _envConfig;
+       // private IHostingEnvironment _envConfig;
 
-        public Startup(IConfiguration configuration,IHostingEnvironment environment)
+        public Startup(IConfiguration configuration)//,IHostingEnvironment environment)
         {            
             Configuration = configuration;
-            _envConfig = environment;
+            //_envConfig = environment;
         }
 
         public IConfiguration Configuration { get; set; }
@@ -30,21 +30,7 @@ namespace CompanyXApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            /*
-            #region Add Configuration  
-            var environmentConfig = $"appsettings.{_envConfig.EnvironmentName}.json";
-            environmentConfig = !File.Exists(Path.Combine(Directory.GetCurrentDirectory(), environmentConfig)) ? "appsettings.json" : environmentConfig;
-
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(environmentConfig)
-                .Build();           
-
-            services.AddSingleton(Configuration);
-
-            #endregion
-            */
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);            
             services.AddDbContext<CompanyXDBContext>(
             options => options.UseSqlServer(Configuration["ConnectionString"])
             );
@@ -56,7 +42,7 @@ namespace CompanyXApi
                         Options.SwaggerDoc("v0.4.1",new Swashbuckle.AspNetCore.Swagger.Info
                             {
                                 Title = "CompanyX API Developer Guide",
-                                Description = "This API is for CRUD operations on a fictif company \"CompanyX\" employees database.",
+                                Description = "This API is for CRUD operations on a fictive company \"CompanyX\" employees database.",
                                 Version = "0.4.1",
                                 Contact =new Swashbuckle.AspNetCore.Swagger.Contact
                                 {
@@ -90,7 +76,7 @@ namespace CompanyXApi
             app.UseSwagger();
             app.UseSwaggerUI(
                 c => {
-                    c.SwaggerEndpoint("/swagger/swagger.json", "CompanyX API v0.4.1");
+                    c.SwaggerEndpoint("/swagger/v0.4.1/swagger.json", "CompanyX API v0.4.1");
                     c.RoutePrefix = string.Empty;                    
                 }
             );

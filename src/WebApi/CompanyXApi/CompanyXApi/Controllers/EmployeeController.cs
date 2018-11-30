@@ -147,6 +147,7 @@ namespace CompanyXApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> CreateEmploye([FromBody] CreateEmployeeVM employee)
         {
+            //if(ModelState.IsValid)
 
             var newEmp = new Employees
             {

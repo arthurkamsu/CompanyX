@@ -15,10 +15,12 @@
 
       <div class="card text-white bg-dark" *ngFor="let elt of employeesToDisplay.employees  | slice:0:3">
         <div class="card-header">
-          <img class="rounded" *ngIf="elt.employeeManager" alt="{{elt.employeeManager.fullName}}" height="24" width="24" title="{{elt.employeeManager.fullName}}" src="{{elt.employeeManager.image}}">
-          <ng-container *ngIf="elt.employeeManager==undefined">
+          <img class="rounded" *ngIf="elt.employeeManager" alt="{{elt.employeeManager.fullName}}" height="32" width="32" title="{{elt.employeeManager.fullName}}" src="{{elt.employeeManager.image}}">
+          <button class="btn btn-outline-primary btn-sm float-right">Details</button>
+
+          <!--<ng-container *ngIf="elt.employeeManager==undefined">
             &middot;
-          </ng-container>
+          </ng-container>-->
         </div>
 
         <img height="200" *ngIf="undifined == elt.employee.image" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
@@ -63,10 +65,9 @@
 
       <div class="card text-white bg-dark" *ngFor="let elt of employeesToDisplay.employees  | slice:3:6">
         <div class="card-header">
-          <img class="rounded" *ngIf="elt.employeeManager" alt="{{elt.employeeManager.fullName}}" height="24" width="24" title="{{elt.employeeManager.fullName}}" src="{{elt.employeeManager.image}}">
-          <ng-container *ngIf="elt.employeeManager==undefined">
-            &middot;
-          </ng-container>
+          <img class="rounded" *ngIf="elt.employeeManager" alt="{{elt.employeeManager.fullName}}" height="32" width="32" title="{{elt.employeeManager.fullName}}" src="{{elt.employeeManager.image}}">
+          
+          <button class="btn btn-outline-primary btn-sm float-right">Details</button>
         </div>
 
         <img height="200" *ngIf="undifined == elt.employee.image" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
