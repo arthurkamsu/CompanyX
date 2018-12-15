@@ -40,8 +40,9 @@ CREATE TABLE [dbo].[Employees]
     [empManager] UNIQUEIDENTIFIER NULL, 
     [empTitle] VARCHAR(50) NOT NULL, 
     [empCode] CHAR(8) NOT NULL DEFAULT ([dbo].[generateNewEmployeeCode](CONVERT([bigint],NEXT VALUE FOR [dbo].[employee_code_seq]))), 
-    [registeredOnUTC] BIGINT NOT NULL, 
+    [UTCRegisteredOn] BIGINT NOT NULL, 
     [empImage] VARCHAR(13) NULL, 
+    [UTCStartDate] BIGINT NOT NULL, 
     CONSTRAINT [FK_Employees_Manager] FOREIGN KEY ([empManager]) REFERENCES [Employees]([empId]), 
     CONSTRAINT [CK_Employees_empCode] CHECK (empSalary > 0)
 )
